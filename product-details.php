@@ -1,4 +1,36 @@
-
+<?php
+	require_once "config.php";
+	session_start();
+	$id=$_GET["id"];
+	$sql="SELECT * FROM products WHERE P_Id='$id'";
+	$result = mysql_query($sql);
+	$row=mysql_fetch_array($result);
+	
+	if(isset($_POST["addCart"])){
+		if($_SESSION["Type"] == "user"){
+			$id			=	$_GET["id"];
+			$quantity 	=	$_POST["quantity"];
+			$date		=	date('Y-m-d');
+			$amount		=	$row["Price"]*$quantity;
+			$userId		=	$_SESSION["UserId"];
+			$P_Name		=	$row["P_Name"];
+			$address	=	$_SESSION["Address"];
+			$phone		=	$_SESSION["Phone"];
+			$image		=	$row["Image"];
+			$result1 	=	"insert into orders(User_Id,Product_Id,P_Name,Image,Address,Phone,Quantity,Amount,Date,Status,StatusAdmin) Values('$userId','$id','$P_Name','$image','$address','$phone','$quantity','$amount','$date','notChecked','notOk')";
+			$sql		=	mysql_query($result1);
+			
+			header('location:cart.php');
+			//echo "insert ok";
+		}
+		else{
+			header('location:login.php');
+		}
+		
+	}
+	
+?>
+	
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,38 +62,7 @@
 	
 	<section>
 	
-	<?php
-		require_once "config.php";
-		
-		$id=$_GET["id"];
-		$sql="SELECT * FROM products WHERE P_Id='$id'";
-		$result = mysql_query($sql);
-		$row=mysql_fetch_array($result);
-		
-		if(isset($_POST["addCart"])){
-			if($_SESSION["Type"] == "user"){
-				
-				$quantity = $_POST["quantity"];
-				$date=date('Y-m-d');
-				$amount=$row["Price"]*$quantity;
-				$userId=$_SESSION["UserId"];
-				$P_Name=$row["P_Name"];
-				$address=$_SESSION["Address"];
-				$phone=$_SESSION["Phone"];
-				$image=$row["Image"];
-				$result1 = "insert into  orders(User_Id,Product_Id,P_Name,Image,Address,Phone,Quantity,Amount,Date,Status,StatusAdmin) Values('$userId','$id','$P_Name','$image','$address','$phone','$quantity','$amount','$date','notChecked','notOk')";
-				$sql= mysql_query($result1);
-				
-				header('location:cart.php');
-				//echo "insert ok";
-			}
-			else{
-				header('location:login.php');
-			}
-			
-		}
-		
-	?>
+	
 		<div class="container">
 		
 			<div class="row">
