@@ -123,8 +123,18 @@
 				</div>
 				
 				<div class="col-sm-9 padding-right">
+				
 					<div class="features_items"><!--features_items-->
 						<h2 class="title text-center">Features Items</h2>
+						<div class="col-md-12">
+							<div class="search_box pull-right">
+								<form action="#" method="POST">
+									<input type="text" name="search_box" placeholder="Search"/>
+									<input  type="hidden" class="btn btn-primary" name="search">
+								</form>
+							</div>
+							</br></br>
+						</div>
 						<?php
 							require_once "config.php";
 							
@@ -134,33 +144,46 @@
 								$result = mysql_query($sql);
 							}
 							else{
-								$sql ="SELECT * FROM products order by P_Id desc";
+								$sql ="SELECT * FROM products";
+								
+								if (isset($_POST['search'])){
+									$search_term = $_POST['search_box'];
+									$sql .= " WHERE P_Name LIKE '%{$search_term}%'";
+									
+								}
+								
 								$result = mysql_query($sql);
 							}
-							
-							while($row=mysql_fetch_array($result))
-							{
-								$url2="product-details.php?id=".$row["P_Id"];
-								
+							if(mysql_num_rows($result) == 0){
 								echo '<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-													<div class="productinfo text-center">
-														<img src="'.$row["Image"].'" alt="" width="200" height="260" />
-														<h2>'.$row["Price"].'</h2>
-														<p>'.$row["P_Name"].'</p>
-														<a href="'.$url2.'" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-													</div>
-											</div>
-											<div class="choose">
-												<ul class="nav nav-pills nav-justified">
-													<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-													<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
-												</ul>
-											</div>
-										</div>
+										<h2>No Item Found</h2>
 									</div>';
+							}else{
+								while($row=mysql_fetch_array($result))
+								{
+									$url2="product-details.php?id=".$row["P_Id"];
+									
+									echo '<div class="col-sm-4">
+											<div class="product-image-wrapper">
+												<div class="single-products">
+														<div class="productinfo text-center">
+															<img src="'.$row["Image"].'" alt="" width="200" height="260" />
+															<h2>'.$row["Price"].'</h2>
+															<p>'.$row["P_Name"].'</p>
+															<a href="'.$url2.'" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+														</div>
+												</div>
+												<div class="choose">
+													<ul class="nav nav-pills nav-justified">
+														<li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+														<li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
+													</ul>
+												</div>
+											</div>
+										</div>';
+								}
 							}
+							
 						?>
 					</div><!--features_items-->
 					
