@@ -118,12 +118,12 @@
 						<fieldset>
 							<div class="form-group">
 								Product Name 
-								<input class="form-control"  name="productName" type="text" value="<?php echo $row["P_Name"];?>">
+								<input class="form-control"  name="productName" type="text" value="<?php echo $row["P_Name"];?>" required/>
 							</div>
 							
 							<div class="form-group">
 								Category
-								<select name="category" class="form-control">
+								<select name="category" class="form-control" required/>
 								<?php 
 									$sql12 = mysql_query("SELECT Name FROM categories ORDER BY Name");
 									while ($row12 = mysql_fetch_array($sql12)){
@@ -135,12 +135,12 @@
 							
 							<div class="form-group">
 								Stock 
-								<input class="form-control"  name="stock" type="number" value="<?php echo $row["Stock"];?>">
+								<input class="form-control"  name="stock" type="number" value="<?php echo $row["Stock"];?>" >
 							</div>
 							
 							<div class="form-group">
 								Price
-								<input class="form-control"  name="price" type="number" value="<?php echo $row["Price"];?>">
+								<input class="form-control"  name="price" type="number" value="<?php echo $row["Price"];?>" required/>
 							</div>
 							
 							<div class="form-group">

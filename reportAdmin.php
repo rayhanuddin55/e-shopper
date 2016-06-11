@@ -41,22 +41,73 @@
 <div class="container body-content">
     <div class="row panel" >
 
+	
+	
         <div  class="col-lg-3 ">
             <?php include('adminMenu.php');?> <!--Admin Menu-->
         </div>
+		
+		
+		
+		
         <div class="col-lg-9">
            
-		    <table class="table table-hover table-bordered animated bounceInRight">
+		    <table class="table table-hover table-bordered animated fadeIn">
+			
+			<div class="col-md-12 form-group">
+				
+				<form method="POST" action="#">
+				<fieldset>
+					<div class="col-md-3">
+						
+						  <select type="submit" name="month" class="form-control" onchange="this.form.submit()">                      
+							  <option value="0">--Select Month--</option>
+							  <option value="1">January</option>
+							  <option value="2">February</option>
+							  <option value="3">March</option>
+							  <option value="4">April</option>
+							  <option value="5">May</option>
+							  <option value="6">June</option>
+							  <option value="7">July</option>
+							  <option value="8">August</option>		  
+							  <option value="9">September</option>
+							  <option value="10">October</option>
+							  <option value="11">November</option>
+							  <option value="12">December</option>
+							
+							</select>
+						
+				</div>
+				&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp 
+				<b>
+					<font size="5" color="#191987">
+						<?php
+							if(isset($_POST['month'])){
+								$monthNum = $_POST['month'];
+								
+									$monthName = date("F", mktime(0, 0, 0, $monthNum, 10));
+									echo $monthName; 
+								
+							}else{
+								echo "All";
+							}
+						?>
+					</font>
+				</b>
+				</fieldset>
+				
+				</form>
+			</div>
+			
 			<h3>Sell's Report</h3>
 				<thead>
 					<tr class="active">
+							
 						<th >Image</th>				  
 						<th >Name</th>
-						<th >Quuantity</th>				  
-						<th >Amount</th>
-						<th >User Name</th>				  
-						<th >Phone</th>
-						<th >Date</th>				  
+						<th >Total Quantity</th>				  
+						<th >Total Amount</th>	
+									  
 						
 					</tr>
 				</thead>
@@ -65,30 +116,79 @@
 					
 						require_once "config.php";
 						
-						$sql ="SELECT * FROM orders WHERE StatusAdmin='Ok'";
-						$result = mysql_query($sql);
+						if(isset($_POST['month'])){
+							
+							$_SESSION["monthFromAdminReport"] = $_POST['month'];
+							$monthForSearch = $_POST['month'];
+							
+							$sqlForProduct ="SELECT distinct P_Name, Image, Product_Id FROM orders WHERE StatusAdmin='Ok' and MONTH(Date) = '$monthForSearch'";
+							$resultForProduct = mysql_query($sqlForProduct);
+							
+							while($rowForProduct=mysql_fetch_array($resultForProduct))
+							{	
+								$productName = $rowForProduct["P_Name"];
+								
+								$sqlForTotal = "select sum(Quantity) as totalQuantity, sum(Amount) as totalAmount from orders where P_Name='$productName' and StatusAdmin='Ok' and MONTH(Date) = '$monthForSearch'";
+								$resultForTotal = mysql_query($sqlForTotal);
+								$rowForTotal = mysql_fetch_array($resultForTotal);
+								
+								echo '<tr >';
+								
+								echo '<td><img src="'.$rowForProduct["Image"].'" width="70" height="70" alt="not found"></td>'; 
+								
+								$url22 = "reportAdminDetails.php?id=".$rowForProduct["Product_Id"];
+								
+								echo '<td><a href="'.$url22.'">'.$productName.'</a></td>'; 
+								echo '<td>'.$rowForTotal["totalQuantity"].'</td>'; 
+								echo '<td>'.$rowForTotal["totalAmount"].'</td>'; 
+								
+								echo '</tr>';
+								
+								@$totalQuantity += $rowForTotal["totalQuantity"];
+								@$totalAmount += $rowForTotal["totalAmount"];
 						
-						
-						while($row=mysql_fetch_array($result))
-						{	
-							$userId = $row["User_Id"];
-							$sql11 ="SELECT UserName FROM users WHERE UserId='$userId'";
-							$result11 = mysql_query($sql11);
-							$row11=mysql_fetch_array($result11);
-							
-							echo '<tr >';
-							echo '<td><img src="'.$row["Image"].'" width="70" height="70" alt="not found"></td>'; 
-							echo '<td>'.$row["P_Name"].'</td>'; 
-							echo '<td>'.$row["Quantity"].'</td>'; 
-							echo '<td>'.$row["Amount"].'</td>'; 
-							echo '<td>'.$row11["UserName"].'</td>'; 
-							echo '<td>'.$row["Phone"].'</td>'; 
-							echo '<td>'.$row["Date"].'</td>'; 
-							
-							echo '</tr>';
-					
-							
+								
+							}
 						}
+						else{
+							$_SESSION["monthFromAdminReport"] = null;
+							$sqlForProduct ="SELECT distinct P_Name, Image, Product_Id FROM orders WHERE StatusAdmin='Ok'";
+							$resultForProduct = mysql_query($sqlForProduct);
+							
+							while($rowForProduct=mysql_fetch_array($resultForProduct))
+							{	
+								$productName = $rowForProduct["P_Name"];
+								
+								$sqlForTotal = "select sum(Quantity) as totalQuantity, sum(Amount) as totalAmount from orders where P_Name='$productName' and StatusAdmin='Ok'";
+								$resultForTotal = mysql_query($sqlForTotal);
+								$rowForTotal = mysql_fetch_array($resultForTotal);
+								
+								echo '<tr >';
+								
+								echo '<td><img src="'.$rowForProduct["Image"].'" width="70" height="70" alt="not found"></td>'; 
+								
+								$url22 = "reportAdminDetails.php?id=".$rowForProduct["Product_Id"];
+								
+								echo '<td><a href="'.$url22.'">'.$productName.'</a></td>'; 
+								echo '<td>'.$rowForTotal["totalQuantity"].'</td>'; 
+								echo '<td>'.$rowForTotal["totalAmount"].'</td>'; 
+								
+								echo '</tr>';
+								
+								@$totalQuantity += $rowForTotal["totalQuantity"];
+								@$totalAmount += $rowForTotal["totalAmount"];
+								
+							}
+						}
+						
+						echo '<tr class="success">';
+						echo '<td></td>'; 
+						echo '<td><b>'."Total".'</b></td>'; 
+						echo '<td><b>'.$totalQuantity.'</b></td>'; 
+						echo '<td><b>'.$totalAmount.'</b></td>'; 
+						echo '</tr >';
+						
+						
 							
 					?>
 

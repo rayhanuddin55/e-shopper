@@ -16,8 +16,8 @@
 						<ul class="nav navbar-nav">
 							<li><a href="https://web.facebook.com/Rayhanuddin55" target="_blank"><i class="fa fa-facebook"></i></a></li>
 							<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-							<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-							<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+							<li><a href="https://www.linkedin.com/in/rayhanuddin55" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+							<li><a href="https://plus.google.com/u/0/+RayhanUddin55" target="_blank"><i class="fa fa-google-plus"></i></a></li>
 						</ul>
 					</div>
 				</div>

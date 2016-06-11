@@ -1,5 +1,11 @@
 <?php 
-
+	
+	if(@$_SERVER['REQUEST_METHOD'] == 'GET'){
+		@session_start();
+		@$_SESSION["previousPage"] = $_SERVER['HTTP_REFERER'];
+	}
+	
+	
 	if(isset($_POST['login']))
 	{
 			$email=$_POST['email'];
@@ -13,7 +19,7 @@
 			{
 				$row=mysql_fetch_array($result);
 				
-				session_start();
+				@session_start();
 				
 				$_SESSION["UserName"] = $row["UserName"];
 				$_SESSION["UserId"] = $row["UserId"];
@@ -21,7 +27,14 @@
 				$_SESSION["Phone"] = $row["Phone"];
 				$_SESSION["Type"] = $row["Type"];
 				
-				header('Location: index.php');
+				if($_SESSION["Type"] == "admin"){
+					header('Location: productList.php');
+				}else{
+				
+					header('Location:'.$_SESSION["previousPage"]);
+					
+				}
+				
 			}
 			else
 			{
@@ -82,8 +95,8 @@
 						<h2>Login to your account</h2>
 						<form action="#" method="POST">
 							
-							<input name="email" type="email" placeholder="Email Address" />
-							<input name="pass" type="password" placeholder="Password" />
+							<input name="email" type="email" placeholder="Email Address" required/>
+							<input name="pass" type="password" placeholder="Password" required/>
 							<span>
 								<input type="checkbox" class="checkbox"> 
 								Keep me signed in
@@ -99,11 +112,11 @@
 					<div class="signup-form animated bounceInRight"><!--sign up form-->
 						<h2>New User Signup!</h2>
 						<form action="#" method="POST">
-							<input name="name" type="text" placeholder="Name"/>
-							<input name="email" type="email" placeholder="Email Address"/>
-							<input name="address" type="text" placeholder="Address"/>
-							<input name="phone" type="number" placeholder="Phone"/>
-							<input name="pass" type="password" placeholder="Password"/>
+							<input name="name" type="text" placeholder="Name" required/>
+							<input name="email" type="email" placeholder="Email Address" required/>
+							<input name="address" type="text" placeholder="Address" required/>
+							<input name="phone" type="number" placeholder="Phone" required/>
+							<input name="pass" type="password" placeholder="Password" required/>
 							<button name="signup" type="submit" class="btn btn-default">Signup</button>
 						</form>
 					</div><!--/sign up form-->

@@ -54,8 +54,12 @@
 									<h1><span>E</span>-SHOPPER</h1>
 									<h2>Get Everything You Need</h2>
 									<p>E-Shopper is a most populer online shopping site in Bangladesh. we care about product quality and on time delivery.</p>
+									<?php
+										if(@$_SESSION["Type"] != "admin"){
+											echo '<a class="btn btn-default get" href="login.php">Create free account now</a>';
+										}
+									?>
 									
-									<a class="btn btn-default get" href="login.php">Create free account now</a>
 								</div>
 								<div class="col-sm-6">
 									<img src="images/home/girl3.jpg" class="girl img-responsive" alt="" />									
@@ -68,9 +72,12 @@
 										<div class="col-sm-6">
 											<h1><span>New Arrival</span></h1>
 											<h2>'.$row11["P_Name"].'</h2>
-											<p>New product avalible !! Get it now.</p>
+											<p>New product avalible !! Get it now.</p>';
 											
-											<a class="btn btn-default get" href="'.$url1.'">Get it now</a>
+											if(@$_SESSION["Type"] != "admin"){
+												echo '<a class="btn btn-default get" href="'.$url1.'">Get it now</a>';
+											}
+										echo '	
 										</div>
 										<div class="col-sm-6">
 											<img src="'.$row11["Image"].'" class="" width="484" height="441" alt="" />
@@ -149,7 +156,8 @@
 								if (isset($_POST['search'])){
 									$search_term = $_POST['search_box'];
 									$sql .= " WHERE P_Name LIKE '%{$search_term}%'";
-									
+								}else{
+									$sql .= " order by P_Id desc";
 								}
 								
 								$result = mysql_query($sql);
@@ -162,15 +170,20 @@
 								while($row=mysql_fetch_array($result))
 								{
 									$url2="product-details.php?id=".$row["P_Id"];
-									
+									$url1="editProduct.php?id=".$row["P_Id"];
 									echo '<div class="col-sm-4">
 											<div class="product-image-wrapper">
 												<div class="single-products">
 														<div class="productinfo text-center">
 															<img src="'.$row["Image"].'" alt="" width="200" height="260" />
 															<h2>'.$row["Price"].'</h2>
-															<p>'.$row["P_Name"].'</p>
-															<a href="'.$url2.'" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+															<p>'.$row["P_Name"].'</p>';
+															if(@$_SESSION["Type"] == "admin"){
+																echo '<a href="'.$url1.'" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Edit this</a>';
+															}else{
+																echo '<a href="'.$url2.'" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>';
+															}
+															echo '
 														</div>
 												</div>
 												<div class="choose">

@@ -44,14 +44,21 @@
         <div  class="col-lg-3 ">
             <?php include('adminMenu.php');?> <!--Admin Menu-->
         </div>
-        <div class="col-md-6 col-sm-5">
+        <div class="col-lg-9">
            
-		    <table class="table table-hover table-bordered animated bounceInRight">
-			<h3>Order List</h3>
+		    <table class="table table-hover table-bordered animated fadeIn">
+			<h3>Sell's Report</h3>
 				<thead>
 					<tr class="active">
+						<th >Date</th>	
+						<th >Image</th>				  
+						<th >Name</th>
+						<th >Quantity</th>				  
+						<th >Amount</th>
 						<th >User Name</th>				  
-						<th >Show Order</th>
+						<th >Phone</th>
+									  
+						
 					</tr>
 				</thead>
 				<tbody>
@@ -59,26 +66,52 @@
 					
 						require_once "config.php";
 						
-						$sql ="SELECT distinct User_Id FROM orders WHERE StatusAdmin='notOk' AND Status='checked'";
-						$result = mysql_query($sql);
-						$userId="";
+						$productId = $_GET["id"];
+						if(isset($_SESSION["monthFromAdminReport"])){
+							$monthFromAdminReport = $_SESSION["monthFromAdminReport"];
+							$sql ="SELECT * FROM orders WHERE Product_Id = '$productId' and StatusAdmin='Ok' and MONTH(Date) = '$monthFromAdminReport'";
+							$result = mysql_query($sql);
+						}else{
+							$sql ="SELECT * FROM orders WHERE Product_Id = '$productId' and StatusAdmin='Ok'";
+							$result = mysql_query($sql);
+						}
+						
+						
 						
 						while($row=mysql_fetch_array($result))
 						{	
+							$userId = $row["User_Id"];
+							$sql11 ="SELECT UserName FROM users WHERE UserId='$userId'";
+							$result11 = mysql_query($sql11);
+							$row11=mysql_fetch_array($result11);
 							
-								$userId=$row["User_Id"];
-								$sql11 ="SELECT UserName FROM users WHERE UserId='$userId'";
-								$result11 = mysql_query($sql11);
-								$row11=mysql_fetch_array($result11);
-								
-								echo '<tr >';
-								echo '<td>'.$row11["UserName"].'</td>'; 
-									
-								$url2="viewOrder.php?id=".$row["User_Id"];
-								echo '<td>'.'<a href='. $url2.'>View</a>'.'</td>';
-								echo '</tr>';
+							echo '<tr >';
+							echo '<td>'.$row["Date"].'</td>'; 
+							echo '<td><img src="'.$row["Image"].'" width="70" height="70" alt="not found"></td>'; 
+							echo '<td>'.$row["P_Name"].'</td>'; 
+							echo '<td>'.$row["Quantity"].'</td>'; 
+							echo '<td>'.$row["Amount"].'</td>'; 
+							echo '<td>'.$row11["UserName"].'</td>'; 
+							echo '<td>'.$row["Phone"].'</td>'; 
 							
+							
+							echo '</tr>';
+							
+							@$totalQuantity += $row["Quantity"];
+							@$totalAmount += $row["Amount"];
 						}
+						
+						echo '<tr class="success">';
+						
+						echo '<td><b>'."Total".'</b></td>'; 
+						echo '<td></td>'; 
+						echo '<td></td>'; 
+						echo '<td><b>'.$totalQuantity.'</b></td>'; 
+						echo '<td><b>'.$totalAmount.'</b></td>'; 
+						echo '<td></td>'; 
+						echo '<td></td>'; 
+						echo '</tr >';
+						
 							
 					?>
 

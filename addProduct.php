@@ -88,12 +88,12 @@
 						<fieldset>
 							<div class="form-group">
 								Product Name 
-								<input class="form-control"  name="productName" type="text" value="">
+								<input class="form-control"  name="productName" type="text" value="" required/>
 							</div>
 							
 							<div class="form-group">
 								Category
-								<select name="category" class="form-control">
+								<select name="category" class="form-control" required/>
 								<?php 
 									$sql = mysql_query("SELECT Name FROM categories ORDER BY Name");
 									while ($row = mysql_fetch_array($sql)){
@@ -105,12 +105,12 @@
 							
 							<div class="form-group">
 								Stock 
-								<input class="form-control"  name="stock" type="number" value="">
+								<input class="form-control"  name="stock" type="number" value="" required/>
 							</div>
 							
 							<div class="form-group">
 								Price
-								<input class="form-control"  name="price" type="number" value="">
+								<input class="form-control"  name="price" type="number" value="" required/>
 							</div>
 							
 							<div class="form-group">
@@ -129,7 +129,7 @@
 							</div>
 							
 							<label class="btn btn-default" for="my-file-selector">
-								<input id="my-file-selector" name="image" id="image" type="file" style="display:none;"/>
+								<input id="my-file-selector" name="image" id="image" type="file" style="display:none;" required/>
 								Product Photo
 							</label>
 							
